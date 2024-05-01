@@ -1,5 +1,6 @@
 package com.example.diploma.dto;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,9 @@ public class ReportDto {
 
     private UUID id;
 
-    private AutomationDto automation;
+    private String name;
+
+    private String cronExpression;
 
     private List<AddresseeDto> addresses;
 

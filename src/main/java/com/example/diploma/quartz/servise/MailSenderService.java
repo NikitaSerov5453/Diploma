@@ -31,7 +31,7 @@ public class MailSenderService {
 
             mailSender.send(message);
         } catch (MessagingException e) {
-            System.out.println("Error sending mail");
+            log.error(e.getMessage());
         }
     }
 

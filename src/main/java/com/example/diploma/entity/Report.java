@@ -22,9 +22,11 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @PrimaryKeyJoinColumn(name = "id")
-    @OneToOne
-    private Automation automation;
+    @Column(name = "report_name")
+    private String name;
+
+    @Column(name = "cron_expression")
+    private String cronExpression;
 
     @JoinColumn(name = "report_id")
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

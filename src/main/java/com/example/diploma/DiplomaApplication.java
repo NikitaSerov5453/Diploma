@@ -1,6 +1,6 @@
 package com.example.diploma;
 
-import com.example.diploma.service.EmailSenderService;
+//import com.example.diploma.service.EmailSenderService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
@@ -13,8 +13,8 @@ import java.util.UUID;
 @SpringBootApplication
 @RequiredArgsConstructor
 public class DiplomaApplication {
-
-	private final EmailSenderService emailSenderService;
+//
+//	private final EmailSenderService emailSenderService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DiplomaApplication.class, args);
