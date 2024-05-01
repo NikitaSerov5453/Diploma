@@ -1,7 +1,7 @@
 package com.example.diploma.service;
 
 import com.example.diploma.dto.SQLRequestDto;
-import com.example.diploma.entity.sql.SQLRequest;
+import com.example.diploma.entity.SQLRequest;
 import com.example.diploma.mapper.SQLRequestMapper;
 import com.example.diploma.repository.SQLRequestRepository;
 import lombok.RequiredArgsConstructor;

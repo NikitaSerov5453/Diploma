@@ -1,11 +1,6 @@
 package com.example.diploma.entity;
 
 
-import com.example.diploma.entity.automation.Automation;
-import com.example.diploma.entity.email.Addressee;
-import com.example.diploma.entity.sql.SQLAuthorisation;
-import com.example.diploma.entity.sql.SQLRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

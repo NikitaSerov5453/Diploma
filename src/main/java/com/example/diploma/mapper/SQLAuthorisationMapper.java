@@ -1,7 +1,7 @@
 package com.example.diploma.mapper;
 
 import com.example.diploma.dto.SQLAuthorisationDto;
-import com.example.diploma.entity.sql.SQLAuthorisation;
+import com.example.diploma.entity.SQLAuthorisation;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;

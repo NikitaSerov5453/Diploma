@@ -1,7 +1,7 @@
 package com.example.diploma.mapper;
 
 import com.example.diploma.dto.AddresseeDto;
-import com.example.diploma.entity.email.Addressee;
+import com.example.diploma.entity.Addressee;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",

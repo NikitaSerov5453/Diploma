@@ -1,0 +1,27 @@
+quartz:
+  #Related attribute configuration
+  auto-startup: true
+  overwrite-existing-jobs: true
+  properties:
+    org:
+      quartz:
+        scheduler:
+          instanceName: IsimClusteredScheduler
+          instanceId: AUTO
+        jobStore:
+          class: org.quartz.impl.jdbcjobstore.JobStoreTX
+          driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+          tablePrefix: qrtz_
+          isClustered: true
+          clusterCheckinInterval: 50000
+          useProperties: false
+        threadPool:
+          class: org.quartz.simpl.SimpleThreadPool
+          threadCount: 10
+          threadPriority: 5
+          threadsInheritContextClassLoaderOfInitializingThread: true
+        #Database Way
+  job-store-type: jdbc
+  #Initialize the table structure, the initial use value is always,Then change the value to never
+  jdbc:
+    initialize-schema: never

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -26,7 +27,7 @@ public class ReportController {
     }
 
     @GetMapping("/{id}")
-    public List<ReportDto> getReportById(@PathVariable("id") UUID id) {
+    public Optional<ReportDto> getReportById(@PathVariable("id") UUID id) {
         return reportService.getReportByReportId(id);
     }
 }

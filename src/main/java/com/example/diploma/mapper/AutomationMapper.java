@@ -1,7 +1,7 @@
 package com.example.diploma.mapper;
 
 import com.example.diploma.dto.AutomationDto;
-import com.example.diploma.entity.automation.Automation;
+import com.example.diploma.entity.Automation;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;

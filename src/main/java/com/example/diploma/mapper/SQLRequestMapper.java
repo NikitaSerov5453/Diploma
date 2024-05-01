@@ -1,7 +1,7 @@
 package com.example.diploma.mapper;
 
 import com.example.diploma.dto.SQLRequestDto;
-import com.example.diploma.entity.sql.SQLRequest;
+import com.example.diploma.entity.SQLRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,9 +31,9 @@ public class ReportService {
                 .toList();
     }
 
-    public List<ReportDto> getReportByReportId(UUID reportId) {
-        return reportRepository.findReportById(reportId).stream()
-                .map(reportMapper::toDto)
-                .toList();
+    public Optional<ReportDto> getReportByReportId(UUID reportId) {
+        return reportRepository.findReportById(reportId).map(reportMapper::toDto);
     }
+
+
 }

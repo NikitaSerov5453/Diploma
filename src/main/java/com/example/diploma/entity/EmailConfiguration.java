@@ -1,4 +1,4 @@
-package com.example.diploma.entity.email;
+package com.example.diploma.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

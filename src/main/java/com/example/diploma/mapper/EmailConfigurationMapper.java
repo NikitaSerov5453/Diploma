@@ -1,7 +1,7 @@
 package com.example.diploma.mapper;
 
 import com.example.diploma.dto.EmailConfigurationDto;
-import com.example.diploma.entity.email.EmailConfiguration;
+import com.example.diploma.entity.EmailConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;

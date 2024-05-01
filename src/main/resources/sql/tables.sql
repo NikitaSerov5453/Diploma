@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS "addresses" (
 
 CREATE TABLE IF NOT EXISTS "automations" (
     id UUID,
+    cron VARCHAR(40),
     report_id UUID
 );
 

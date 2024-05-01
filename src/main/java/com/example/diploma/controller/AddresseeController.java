@@ -26,10 +26,4 @@ public class AddresseeController {
     public List<AddresseeDto> getAllAddressees() {
         return addresseeService.getAllAddressees();
     }
-
-//    @GetMapping("/{id}")
-//    public List<AddresseeDto> getAddresseeByReportId(@PathVariable("id") UUID id) {
-//        return addresseeService.getAddresseeByReport(id);
-//    }
-
 }

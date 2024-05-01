@@ -1,7 +1,7 @@
 package com.example.diploma.service;
 
 import com.example.diploma.dto.SQLAuthorisationDto;
-import com.example.diploma.entity.sql.SQLAuthorisation;
+import com.example.diploma.entity.SQLAuthorisation;
 import com.example.diploma.mapper.SQLAuthorisationMapper;
 import com.example.diploma.repository.SQLAuthorisationRepository;
 import lombok.RequiredArgsConstructor;
