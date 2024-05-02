@@ -1,20 +1,17 @@
 package com.example.diploma.controller;
 
+import com.example.diploma.dto.AddresseeDto;
 import com.example.diploma.dto.ReportDto;
-import com.example.diploma.quartz.ScheduleEmailRequest;
 import com.example.diploma.quartz.job.EmailJob;
 import com.example.diploma.service.ReportService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import javax.print.attribute.standard.JobMediaSheets;
+import java.util.*;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 
@@ -31,10 +28,11 @@ public class ReportController {
     @PostMapping
     public ReportDto addReport(@Valid @RequestBody ReportDto reportDto) {
         try {
-            JobDetail jobDetail = buildJobDetail(reportDto);
-            Trigger trigger = buildJobTrigger(jobDetail, reportDto.getCronExpression());
-            scheduler.scheduleJob(jobDetail, trigger);
-
+            for (AddresseeDto a : reportDto.getAddresses()) {
+                JobDetail jobDetail = jobDetail(a.getEmail());
+                Trigger trigger = jobTrigger(jobDetail, reportDto.getCronExpression());
+                scheduler.scheduleJob(jobDetail, trigger);
+            }
             return reportService.createNewReport(reportDto);
         } catch (SchedulerException ex) {
             log.error(ex.getMessage());
@@ -52,12 +50,12 @@ public class ReportController {
         return reportService.getReportByReportId(id);
     }
 
-    private JobDetail buildJobDetail(ReportDto reportDto) {
+    private JobDetail jobDetail(String email) {
         JobDataMap jobDataMap = new JobDataMap();
 
-        jobDataMap.put("email", reportDto.getAddresses().getFirst().getEmail());//получатель
-        jobDataMap.put("subject", reportDto.getSqlRequests().getFirst().getRequest());//тема
-        jobDataMap.put("body", reportDto.getCronExpression());//тело
+        jobDataMap.put("body", "reportDto.getCronExpression()");
+        jobDataMap.put("email", email);
+        jobDataMap.put("subject", "them");
 
         return JobBuilder.newJob(EmailJob.class)
                 .withIdentity(UUID.randomUUID().toString(), "email-jobs")
@@ -67,7 +65,7 @@ public class ReportController {
                 .build();
     }
 
-    private Trigger buildJobTrigger(JobDetail jobDetail, String crone) {
+    private Trigger jobTrigger(JobDetail jobDetail, String crone) {
         return TriggerBuilder.newTrigger()
                 .forJob(jobDetail)
                 .withIdentity(jobDetail.getKey().getName(), "email-triggers")
