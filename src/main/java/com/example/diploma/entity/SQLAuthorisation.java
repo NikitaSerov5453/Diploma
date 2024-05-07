@@ -20,6 +20,8 @@ public class SQLAuthorisation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private String url;
+
     private String login;
 
     private String password;

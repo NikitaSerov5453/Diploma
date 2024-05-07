@@ -1,14 +1,16 @@
-package com.example.diploma.quartz.servise;
+package com.example.diploma.service;
 
+import jakarta.activation.MimeType;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -21,12 +23,16 @@ public class MailSenderService {
         try {
             log.info("Sending Email to {}", toEmail);
             MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.toString());
             helper.setSubject(subject);
-            helper.setText(text, true);
+            message.setContent(text, "text/html;charset=UTF-8");
+//            message.setContent("", "text/css;charset=UTF-8");
             helper.setFrom(fromEmail);
             helper.setTo(toEmail);
+
+//            FileSystemResource file = new FileSystemResource("C:/kitty.png");
+//            helper.addAttachment(Objects.requireNonNull(file.getFilename()), file);
 
             mailSender.send(message);
         } catch (MessagingException e) {

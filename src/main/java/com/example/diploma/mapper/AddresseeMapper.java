@@ -13,4 +13,5 @@ public interface AddresseeMapper {
     AddresseeDto toDto(Addressee addressee);
 
     Addressee toEntity(AddresseeDto addresseeDto);
+
 }

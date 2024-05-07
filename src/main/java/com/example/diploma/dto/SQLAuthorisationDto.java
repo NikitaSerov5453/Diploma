@@ -15,6 +15,8 @@ public class SQLAuthorisationDto {
 
     private UUID id;
 
+    private String url;
+
     private String login;
 
     private String password;

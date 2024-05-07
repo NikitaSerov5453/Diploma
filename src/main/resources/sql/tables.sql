@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS "employees" (
 
 CREATE TABLE IF NOT EXISTS "sql_authorisations" (
     id UUID PRIMARY KEY,
+    url VARCHAR(256),
     login VARCHAR(40),
     password VARCHAR(256),
     report_id UUID
