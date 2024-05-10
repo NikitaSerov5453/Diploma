@@ -27,7 +27,6 @@ public class MailSenderService {
 
             helper.setSubject(subject);
             message.setContent(text, "text/html;charset=UTF-8");
-//            message.setContent("", "text/css;charset=UTF-8");
             helper.setFrom(fromEmail);
             helper.setTo(toEmail);
 

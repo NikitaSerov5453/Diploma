@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "sql_authorisations" (
 CREATE TABLE IF NOT EXISTS "sql_requests" (
     id UUID,
     request VARCHAR(1000),
-    report_id UUID
+    sql_authorisation_id UUID
 );
 
 CREATE TABLE IF NOT EXISTS "addresses" (

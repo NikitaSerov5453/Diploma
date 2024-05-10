@@ -1,10 +1,10 @@
 package com.example.diploma.controller;
 
 import com.example.diploma.dto.EmployeeDto;
-import com.example.diploma.entity.Employee;
 import com.example.diploma.service.EmployeeService;
-import com.example.diploma.service.RoleService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

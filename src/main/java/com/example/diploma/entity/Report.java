@@ -29,14 +29,10 @@ public class Report {
     private String cronExpression;
 
     @JoinColumn(name = "report_id")
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Addressee> addresses;
 
     @JoinColumn(name = "report_id")
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<SQLRequest> sqlRequests;
-
-    @JoinColumn(name = "report_id")
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<SQLAuthorisation> sqlAuthorisations;
 }

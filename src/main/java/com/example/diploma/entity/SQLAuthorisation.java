@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -25,4 +26,8 @@ public class SQLAuthorisation {
     private String login;
 
     private String password;
+
+    @JoinColumn(name = "sql_authorisation_id")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<SQLRequest> sqlRequests;
 }

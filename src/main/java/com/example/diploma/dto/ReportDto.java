@@ -24,8 +24,6 @@ public class ReportDto {
 
     private List<AddresseeDto> addresses;
 
-    private List<SQLRequestDto> sqlRequests;
-
     private List<SQLAuthorisationDto> sqlAuthorisations;
 
 }

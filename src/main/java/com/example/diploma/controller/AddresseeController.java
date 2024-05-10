@@ -1,14 +1,11 @@
 package com.example.diploma.controller;
 
 import com.example.diploma.dto.AddresseeDto;
-import com.example.diploma.dto.ReportDto;
 import com.example.diploma.service.AddresseeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
-
 
 @RestController
 @RequiredArgsConstructor

@@ -35,5 +35,9 @@ public class ReportService {
         return reportRepository.findReportById(reportId).map(reportMapper::toDto);
     }
 
+    public ReportDto getReportById(UUID reportId) {
+        return reportRepository.findById(reportId).map(reportMapper::toDto).orElse(null);
+    }
+
 
 }
