@@ -47,6 +47,11 @@ public class UserService {
         return userMapper.toDto(userRepository.save(entity));
     }
 
+    public UserDto updateUser(UserDto userDto) {
+        User user = userMapper.toEntity(userDto);
+        return userMapper.toDto(userRepository.save(user));
+    }
+
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(userMapper::toDto)

@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS "roles" (
 CREATE TABLE IF NOT EXISTS "reports" (
     id UUID PRIMARY KEY,
     report_name VARCHAR(256),
-    cron_expression VARCHAR(40)
+    cron_expression VARCHAR(40),
+    automated_reporting UUID
 );
 
 CREATE TABLE IF NOT EXISTS "email_configurations" (

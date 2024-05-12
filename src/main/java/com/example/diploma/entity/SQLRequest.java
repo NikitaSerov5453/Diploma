@@ -21,4 +21,9 @@ public class SQLRequest {
     private UUID id;
 
     private String request;
+
+    @Column(name = "sql_authorisation_id")
+    private UUID sqlAuthorisationsId;
+
+    
 }

@@ -25,4 +25,7 @@ public class Addressee {
     @Email
     private String email;
 
+    @Column(name = "report_id")
+    private UUID reportId;
+
 }

@@ -27,6 +27,9 @@ public class SQLAuthorisation {
 
     private String password;
 
+    @Column(name = "report_id")
+    private UUID reportId;
+
     @JoinColumn(name = "sql_authorisation_id")
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<SQLRequest> sqlRequests;

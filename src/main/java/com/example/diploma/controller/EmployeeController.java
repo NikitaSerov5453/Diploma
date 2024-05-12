@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +20,16 @@ public class EmployeeController {
     @PostMapping
     public EmployeeDto addEmployee(@RequestBody EmployeeDto employeeDto) {
         return employeeService.addEmployee(employeeDto);
+    }
+
+    @PutMapping("/update")
+    public EmployeeDto updateEmployee(@RequestBody EmployeeDto employeeDto) {
+        return employeeService.updateEmployee(employeeDto);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteEmployee(@PathVariable UUID id) {
+        employeeService.deleteEmployee(id);
     }
 
     @GetMapping

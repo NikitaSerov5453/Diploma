@@ -22,6 +22,8 @@ public class ReportDto {
 
     private String cronExpression;
 
+    private UUID automatedReporting;
+
     private List<AddresseeDto> addresses;
 
     private List<SQLAuthorisationDto> sqlAuthorisations;

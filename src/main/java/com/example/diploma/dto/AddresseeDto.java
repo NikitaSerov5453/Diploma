@@ -1,6 +1,7 @@
 package com.example.diploma.dto;
 
 import com.example.diploma.entity.Report;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,6 @@ public class AddresseeDto {
     private UUID id;
 
     private String email;
+
 
 }

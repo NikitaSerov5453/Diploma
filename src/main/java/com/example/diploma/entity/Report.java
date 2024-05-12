@@ -28,6 +28,9 @@ public class Report {
     @Column(name = "cron_expression")
     private String cronExpression;
 
+    @Column(name = "automated_reporting")
+    private UUID automatedReporting;
+
     @JoinColumn(name = "report_id")
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Addressee> addresses;

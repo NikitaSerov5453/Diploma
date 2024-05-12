@@ -1,27 +1,19 @@
 package com.example.diploma.quartz.job;
 
-import com.example.diploma.dto.ReportDto;
-import com.example.diploma.dto.SQLAuthorisationDto;
-import com.example.diploma.dto.SQLRequestDto;
-import com.example.diploma.entity.Report;
 import com.example.diploma.quartz.schedule.MailScheduleService;
-import com.example.diploma.service.AddresseeService;
 import com.example.diploma.service.MailSenderService;
-import com.example.diploma.service.ReportService;
-import com.example.diploma.test.Test;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.stereotype.Component;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 
 @Component
@@ -35,39 +27,67 @@ public class EmailJob implements Job {
 
     private final MailSenderService mailSenderService;
 
-    private final AddresseeService addresseeService;
-
     private final MailScheduleService mailScheduleService;
 
-    private final ReportService reportService;
+    /*
+    Работа выполняющайся при срабатывании триггера
 
+    Серриализуются только параметры не требующие обновления при каждои запуске метода
+     */
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         log.info("Executing Job with key {}", jobExecutionContext.getJobDetail().getKey());
 
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
 
+        int addressesSize = Integer.parseInt(jobDataMap.getString("addressesSize"));
+        int authorisationsSize = Integer.parseInt(jobDataMap.getString("authorisationsSize"));
+
         List<String> addresses = new ArrayList<>();
+        List<Statement> statements = new ArrayList<>();
+        List<List<String>> queries = new ArrayList<>(authorisationsSize);
+        List<Integer> queriesSize = new ArrayList<>();
 
         String name = jobDataMap.getString("name");
-        int size = Integer.parseInt(jobDataMap.getString("addressesSize"));
-        for (int i = 0; i < size; i++) {
+        StringBuilder htmlTable = new StringBuilder();
+
+        for (int i = 0; i < authorisationsSize; i++) {
+            queries.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < addressesSize; i++) {
             addresses.add(jobDataMap.getString("addresses[" + i + "]"));
         }
-        String url = jobDataMap.getString("url");
-        String login = jobDataMap.getString("login");
-        String password = jobDataMap.getString("password");
-        String query = jobDataMap.getString("query");
 
-        String htmlTable = "hello";
-        try {
-            htmlTable = mailScheduleService.toHtmlTable(url, login, password, query);
-        } catch (SQLException e) {
-            log.error(e.getMessage());
+        for (int i = 0; i < authorisationsSize; i++) {
+            queriesSize.add(Integer.parseInt(jobDataMap.getString("querySize[" + i + "]")));
         }
 
-        for (String address : addresses) {
-            mailSenderService.sendMail(mailProperties.getUsername(), address, name, htmlTable);
+        for (int i = 0; i < authorisationsSize; i++) {
+            statements.add(mailScheduleService.statement(
+                    jobDataMap.getString("url[" + i + "]"),
+                    jobDataMap.getString("login[" + i + "]"),
+                    jobDataMap.getString("password[" + i + "]"))
+            );
+        }
+
+        for (int i = 0; i < authorisationsSize; i++) {
+            for (int j = 0; j < queriesSize.get(i); j++) {
+                queries.get(i).add(jobDataMap.getString("query[" + i + "][" + j + "]"));
+            }
+        }
+
+        for (int i = 0; i < authorisationsSize; i++) {
+            for (int j = 0; j < queriesSize.get(i); j++) {
+                try {
+                     htmlTable.append(mailScheduleService.toHtmlTable(statements.get(i).executeQuery(queries.get(i).get(j))));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            for (String address : addresses) {
+                mailSenderService.sendMail(mailProperties.getUsername(), address, name, htmlTable.toString());
+            }
         }
     }
 }

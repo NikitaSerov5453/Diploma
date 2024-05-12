@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,11 @@ public class SQLRequestService {
     public SQLRequestDto addSQLRequest(SQLRequestDto sqlRequestDto) {
         SQLRequest entity = sqlRequestMapper.toEntity(sqlRequestDto);
         return sqlRequestMapper.toDto(sqlRequestRepository.save(entity));
+    }
+
+    public void deleteAllRequestsByReportId(UUID sqlAuthorisationsId) {
+        List<SQLRequest> sqlRequests = sqlRequestRepository.findBySqlAuthorisationsId(sqlAuthorisationsId);
+        sqlRequestRepository.deleteAll(sqlRequests);
     }
 
     public List<SQLRequestDto> getAllSQLRequests() {

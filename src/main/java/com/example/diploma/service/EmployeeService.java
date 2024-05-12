@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +22,15 @@ public class EmployeeService {
     public EmployeeDto addEmployee(EmployeeDto employeeDto) {
         Employee entity = employeeMapper.toEntity(employeeDto);
         return employeeMapper.toDto(employeeRepository.save(entity));
+    }
+
+    public EmployeeDto updateEmployee(EmployeeDto employeeDto) {
+        Employee entity = employeeMapper.toEntity(employeeDto);
+        return employeeMapper.toDto(employeeRepository.save(entity));
+    }
+
+    public void deleteEmployee(UUID id) {
+        employeeRepository.deleteById(id);
     }
 
     public List<EmployeeDto> getAllEmployeesDto() {

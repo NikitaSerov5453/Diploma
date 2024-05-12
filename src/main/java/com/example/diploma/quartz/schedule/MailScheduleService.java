@@ -1,15 +1,10 @@
 package com.example.diploma.quartz.schedule;
 
-import com.example.diploma.dto.AddresseeDto;
 import com.example.diploma.dto.ReportDto;
-import com.example.diploma.dto.SQLAuthorisationDto;
-import com.example.diploma.entity.SQLAuthorisation;
 import com.example.diploma.quartz.job.EmailJob;
-import com.example.diploma.quartz.triggers.SimpleTriggerListener;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -28,12 +23,14 @@ public class MailScheduleService {
 
     private final Scheduler scheduler;
 
+    /*
+    Создание задачи которую необходимо запускать по определенному рассписанию
+     */
     public void createSchedule(ReportDto reportDto) {
         try {
             JobDetail jobDetail = jobDetail(reportDto);
             Trigger trigger = jobTrigger(jobDetail, reportDto);
 
-            scheduler.getContext().put("reportDto", reportDto);
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException e) {
             log.error(e.getMessage());
@@ -58,6 +55,9 @@ public class MailScheduleService {
         }
     }
 
+    /*
+    Нужен для передачи данных необходимых для работы, а так же передает их в БД для хранения
+     */
     private JobDetail jobDetail(ReportDto reportDto) {
         JobDataMap jobDataMap = new JobDataMap();
 
@@ -66,14 +66,20 @@ public class MailScheduleService {
         for (int i = 0; i < reportDto.getAddresses().size(); i++) {
             jobDataMap.put("addresses[" + i + "]", reportDto.getAddresses().get(i).getEmail());
         }
-        jobDataMap.put("url", reportDto.getSqlAuthorisations().getFirst().getUrl());
-        jobDataMap.put("login", reportDto.getSqlAuthorisations().getFirst().getLogin());
-        jobDataMap.put("password", reportDto.getSqlAuthorisations().getFirst().getPassword());
-        jobDataMap.put("query", reportDto.getSqlAuthorisations().getFirst().getSqlRequests().getFirst().getRequest());
+        jobDataMap.put("authorisationsSize", String.valueOf(reportDto.getSqlAuthorisations().size()));
+        for (int i = 0; i < reportDto.getSqlAuthorisations().size(); i++) {
+            jobDataMap.put("url[" + i + "]", reportDto.getSqlAuthorisations().get(i).getUrl());
+            jobDataMap.put("login[" + i + "]", reportDto.getSqlAuthorisations().get(i).getLogin());
+            jobDataMap.put("password[" + i + "]", reportDto.getSqlAuthorisations().get(i).getPassword());
 
+            jobDataMap.put("querySize[" + i + "]", String.valueOf(reportDto.getSqlAuthorisations().get(i).getSqlRequests().size()));
+            for (int j = 0; j < reportDto.getSqlAuthorisations().get(i).getSqlRequests().size(); j++) {
+                jobDataMap.put("query[" + i + "][" + j + "]", reportDto.getSqlAuthorisations().get(i).getSqlRequests().get(j).getRequest());
+            }
+        }
 
         return JobBuilder.newJob(EmailJob.class)
-                .withIdentity(UUID.randomUUID().toString(), reportDto.getName())
+                .withIdentity(reportDto.getAutomatedReporting().toString(), reportDto.getName())
                 .requestRecovery(true)
                 .withDescription("Send Email Job")
                 .usingJobData(jobDataMap)
@@ -81,52 +87,79 @@ public class MailScheduleService {
                 .build();
     }
 
+    /*
+    Триггер задачи.
+
+    Нужен что бы запускать задачу по рассписанию
+
+    Использует Крон выражения
+     */
     private Trigger jobTrigger(JobDetail jobDetail, ReportDto reportDto) {
         return TriggerBuilder.newTrigger()
                 .startNow()
                 .forJob(jobDetail)
-                .withIdentity(jobDetail.getKey().getName(), reportDto.getName())
+                .withIdentity(reportDto.getAutomatedReporting().toString(), reportDto.getName())
                 .withDescription("Send Email Trigger")
                 .withSchedule(cronSchedule(reportDto.getCronExpression()))
                 .build();
     }
 
-    public String toHtmlTable(String url, String login, String password, String query) throws SQLException {
-        Connection connection = DriverManager.getConnection(
-                url,
-                login,
-                password);
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(query);
+    /*
+    Подключение к сторонней БД
+     */
+    public Statement statement(String url, String login, String password) {
+        try {
+            Connection connection = DriverManager.getConnection(
+                    url,
+                    login,
+                    password);
+            return connection.createStatement();
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    /*
+    Преобразование таблицы из бд в единую String с HTML разметкой
+     */
+    public StringBuilder toHtmlTable(ResultSet resultSet) throws SQLException {
         ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<table style=\"border: 1px solid #000000; border-collapse: collapse;\">");
+        stringBuilder.append("<table style=\"border: 1px solid #000000; border-collapse: collapse; margin-bottom: 20px;\">");
         while (resultSet.next()) {
             stringBuilder.append("<tr>");
             for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-                stringBuilder.append("<td style=\"border: 1px solid #000000; padding: 5px\">").append(resultSet.getString(i)).append("</td>");
+                stringBuilder.append("<td style=\"border: 1px solid #000000; padding: 5px;\">").append(resultSet.getString(i)).append("</td>");
             }
             stringBuilder.append("</tr>");
+
         }
-        stringBuilder.append("</th>");
-        return stringBuilder.toString();
+        stringBuilder.append("</table>");
+
+        return stringBuilder;
     }
 
-    public void updateReportDto(ReportDto reportDto) {
+    public void stopSchedule(UUID scheduleId, UUID reportId) {
         try {
-            JobDetail jobDetail = scheduler.getJobDetail(new JobKey(reportDto.getName()));
-            if (jobDetail != null) {
-                jobDetail.getJobDataMap().put(reportDto.getName(), reportDto);
-                scheduler.addJob(jobDetail, true, true);
-            } else {
-                log.error("jobDetail is null");
-            }
+            scheduler.unscheduleJob(new TriggerKey(scheduleId.toString(), reportId.toString()));
         } catch (SchedulerException e) {
-            log.error(e.getMessage());
+            log.error("{} ошибка отключения планировщика", e.getMessage());
         }
     }
 
+    public void deleteSchedule(UUID scheduleId, UUID reportId) {
+        try {
+            scheduler.deleteJob(new JobKey(scheduleId.toString(), reportId.toString()));
+        } catch (SchedulerException e) {
+            log.error("{} ошибка удаления планировщика", e.getMessage());
+        }
+    }
+
+    /*
+    Получение всех задач находящихся в процессе выполнения
+     */
     public List<ReportDto> getReportDtos() {
         try {
             return scheduler.getJobKeys(GroupMatcher.anyGroup())
@@ -147,6 +180,9 @@ public class MailScheduleService {
         }
     }
 
+    /*
+    Получение конкретной задачи с определенным {id} находящейся в процессе выполнения
+     */
     public ReportDto getReportDto(String id) {
         try {
             JobDetail jobDetail = scheduler.getJobDetail(new JobKey(id));
