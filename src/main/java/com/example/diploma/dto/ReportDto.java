@@ -1,11 +1,9 @@
 package com.example.diploma.dto;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +21,8 @@ public class ReportDto {
     private String cronExpression;
 
     private UUID automatedReporting;
+
+    private String reportCreator;
 
     private List<AddresseeDto> addresses;
 

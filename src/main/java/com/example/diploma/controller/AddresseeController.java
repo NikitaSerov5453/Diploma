@@ -10,6 +10,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 @RequestMapping("/addressees")
 public class AddresseeController {
 

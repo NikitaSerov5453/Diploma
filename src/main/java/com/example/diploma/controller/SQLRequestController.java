@@ -2,13 +2,16 @@ package com.example.diploma.controller;
 
 import com.example.diploma.dto.SQLRequestDto;
 import com.example.diploma.service.SQLRequestService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 @RequestMapping("/requests")
 public class SQLRequestController {
 

@@ -1,11 +1,13 @@
 package com.example.diploma.entity;
 
+import com.example.diploma.dto.ReportDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -26,6 +28,10 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "is_locked")
+    @Builder.Default
+    private Boolean isLocked = false;
+
     @JoinColumn(name = "role_id")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Role role;
@@ -34,7 +40,7 @@ public class User {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Employee employee;
 
-//    @JoinColumn(name = "email_configuration_id")
-//    @OneToMany(cascade = {CascadeType.ALL})
-//    private List<EmailConfiguration> emailConfiguration;
+    @JoinColumn(name = "report_creator")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Report> reports;
 }

@@ -1,10 +1,12 @@
+SET search_path TO public;
 CREATE TABLE IF NOT EXISTS "users" (
     id UUID PRIMARY KEY,
     username VARCHAR(256),
     password VARCHAR(256),
     role_id UUID NOT NULL,
     employee_id UUID,
-    email_configuration_id UUID
+    email_configuration_id UUID,
+    is_locked BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS "roles" (
@@ -16,7 +18,8 @@ CREATE TABLE IF NOT EXISTS "reports" (
     id UUID PRIMARY KEY,
     report_name VARCHAR(256),
     cron_expression VARCHAR(40),
-    automated_reporting UUID
+    automated_reporting UUID,
+    report_creator VARCHAR(40)
 );
 
 CREATE TABLE IF NOT EXISTS "email_configurations" (
@@ -56,6 +59,8 @@ CREATE TABLE IF NOT EXISTS "addresses" (
     email VARCHAR(60),
     report_id UUID
 );
+
+ALTER TABLE reports ADD COLUMN report_creator VARCHAR(40);
 
 
 

@@ -31,6 +31,9 @@ public class Report {
     @Column(name = "automated_reporting")
     private UUID automatedReporting;
 
+    @Column(name = "report_creator")
+    private String reportCreator;
+
     @JoinColumn(name = "report_id")
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Addressee> addresses;

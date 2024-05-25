@@ -17,20 +17,27 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+
 public class ReportService {
 
     private final ReportRepository reportRepository;
 
     private final ReportMapper reportMapper;
 
-    private final  AddresseeService addresseeService;
+    private final AddresseeService addresseeService;
 
     private final MailScheduleService mailScheduleService;
 
     private final SQLAuthorisationService sqlAuthorisationService;
 
+    private final UserService userService;
+
 
     public ReportDto createNewReport(ReportDto reportDto) {
+        reportDto.setAutomatedReporting(UUID.randomUUID());
+        mailScheduleService.createSchedule(reportDto);
+//        reportDto.setReportCreator(userService.getCurrentUser().getUsername());
+
         Report entity = reportMapper.toEntity(reportDto);
         return reportMapper.toDto(reportRepository.save(entity));
     }

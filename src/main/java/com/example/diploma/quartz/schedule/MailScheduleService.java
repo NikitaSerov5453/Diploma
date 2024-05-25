@@ -4,6 +4,7 @@ import com.example.diploma.dto.ReportDto;
 import com.example.diploma.quartz.job.EmailJob;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -58,6 +59,7 @@ public class MailScheduleService {
     /*
     Нужен для передачи данных необходимых для работы, а так же передает их в БД для хранения
      */
+
     private JobDetail jobDetail(ReportDto reportDto) {
         JobDataMap jobDataMap = new JobDataMap();
 
@@ -94,6 +96,7 @@ public class MailScheduleService {
 
     Использует Крон выражения
      */
+
     private Trigger jobTrigger(JobDetail jobDetail, ReportDto reportDto) {
         return TriggerBuilder.newTrigger()
                 .startNow()

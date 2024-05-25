@@ -38,4 +38,3 @@ public class EmailConfiguration {
     @Column(name = "properties_starttls_enable")
     private String propertiesStarttlsEnable;
 }
-

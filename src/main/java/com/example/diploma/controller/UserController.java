@@ -5,7 +5,9 @@ import com.example.diploma.service.UserService;
 import com.example.diploma.validation.UserValidator;
 
 import jakarta.validation.ValidationException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 @RequestMapping("/users")
 public class UserController {
 
@@ -30,8 +33,14 @@ public class UserController {
         return userService.addUser(userDto);
     }
 
+    @GetMapping("/current")
+    public UserDto getCurrentUser() {
+        return userService.getCurrentUser();
+    }
+
     @GetMapping
     public List<UserDto> getUser() {
         return userService.getAllUsers();
     }
+
 }

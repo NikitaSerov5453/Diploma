@@ -15,6 +15,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
 @RequestMapping("/reports")
 public class ReportController {
 
@@ -25,8 +26,6 @@ public class ReportController {
 
     @PostMapping
     public ReportDto addReport(@Valid @RequestBody ReportDto reportDto) {
-        reportDto.setAutomatedReporting(UUID.randomUUID());
-        mailScheduleService.createSchedule(reportDto);
         return reportService.createNewReport(reportDto);
     }
 

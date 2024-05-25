@@ -2,6 +2,7 @@ package com.example.diploma.quartz.job;
 
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.service.MailSenderService;
+import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -32,7 +33,7 @@ public class EmailJob implements Job {
     /*
     Работа выполняющайся при срабатывании триггера
 
-    Серриализуются только параметры не требующие обновления при каждои запуске метода
+    Серриализуются только параметры не требующие обновления при каждом запуске метода
      */
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
@@ -43,7 +44,7 @@ public class EmailJob implements Job {
         int addressesSize = Integer.parseInt(jobDataMap.getString("addressesSize"));
         int authorisationsSize = Integer.parseInt(jobDataMap.getString("authorisationsSize"));
 
-        List<String> addresses = new ArrayList<>();
+        String[] addresses = new String[addressesSize];
         List<Statement> statements = new ArrayList<>();
         List<List<String>> queries = new ArrayList<>(authorisationsSize);
         List<Integer> queriesSize = new ArrayList<>();
@@ -56,7 +57,7 @@ public class EmailJob implements Job {
         }
 
         for (int i = 0; i < addressesSize; i++) {
-            addresses.add(jobDataMap.getString("addresses[" + i + "]"));
+            addresses[i] = jobDataMap.getString("addresses[" + i + "]");
         }
 
         for (int i = 0; i < authorisationsSize; i++) {
@@ -85,9 +86,7 @@ public class EmailJob implements Job {
                     throw new RuntimeException(e);
                 }
             }
-            for (String address : addresses) {
-                mailSenderService.sendMail(mailProperties.getUsername(), address, name, htmlTable.toString());
-            }
+            mailSenderService.sendMail(mailProperties.getUsername(), addresses, name, htmlTable.toString());
         }
     }
 }
