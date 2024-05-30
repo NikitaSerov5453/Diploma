@@ -25,7 +25,4 @@ public class controller {
         modelAndView.addObject("reports", repository.findAll());
         return modelAndView;
     }
-
-
-
 }

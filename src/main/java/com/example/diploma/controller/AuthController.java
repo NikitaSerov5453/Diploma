@@ -40,8 +40,13 @@ public class AuthController {
         return principal.getName();
     }
 
-    @PostMapping("/auth")
+    @PostMapping
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequestDto requestDto) {
         return authService.createAuthToken(requestDto);
+    }
+
+    @GetMapping
+    public String getAuthToken() {
+        return "вы авторизаваны";
     }
 }

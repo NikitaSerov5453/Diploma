@@ -1,4 +1,4 @@
-package com.example.diploma.quartz.job;
+package com.example.diploma.quartz.schedule.job;
 
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.service.MailSenderService;

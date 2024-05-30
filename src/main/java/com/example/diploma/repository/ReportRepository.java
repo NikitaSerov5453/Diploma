@@ -19,4 +19,6 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
     @Query(value = "SELECT * FROM Reports", nativeQuery = true)
     List<Report> stringList();
 
+    List<Report> findAllByReportCreator(String reportCreator);
+
 }

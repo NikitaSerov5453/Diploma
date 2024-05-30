@@ -24,7 +24,7 @@ public class ReportController {
     private final MailScheduleService mailScheduleService;
 
 
-    @PostMapping
+    @PostMapping("/undefined")
     public ReportDto addReport(@Valid @RequestBody ReportDto reportDto) {
         return reportService.createNewReport(reportDto);
     }
@@ -32,6 +32,11 @@ public class ReportController {
     @GetMapping
     public List<ReportDto> getAllReports() {
         return reportService.getAllReports();
+    }
+
+    @GetMapping("/all/{reportCreator}")
+    public List<ReportDto> getReportsByReportCreator(@PathVariable("reportCreator") String reportCreator) {
+        return reportService.getAllReportsByReportCreator(reportCreator);
     }
 
     @GetMapping("/{id}")

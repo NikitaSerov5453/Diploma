@@ -45,8 +45,7 @@ public class ReportService {
     public ReportDto updateReport(ReportDto reportDto) {
         addresseeService.deleteAllAddresseesByReportId(reportDto.getId());
         sqlAuthorisationService.deleteAllSQLAuthorisationByReportId(reportDto.getId());
-        mailScheduleService.deleteSchedule(reportDto.getAutomatedReporting(), reportDto.getId());
-
+        mailScheduleService.deleteSchedule(reportDto.getAutomatedReporting(), reportDto.getName());
         Report entity = reportMapper.toEntity(reportDto);
         mailScheduleService.createSchedule(reportDto);
 
@@ -61,12 +60,22 @@ public class ReportService {
     }
 
     public List<ReportDto> getAllReports() {
-        return reportRepository.findAll().stream()
+        return reportRepository
+                .findAll()
+                .stream()
                 .map(reportMapper::toDto)
                 .toList();
     }
 
     public Optional<ReportDto> getReportByReportId(UUID reportId) {
         return reportRepository.findReportById(reportId).map(reportMapper::toDto);
+    }
+
+    public List<ReportDto> getAllReportsByReportCreator(String reportCreator) {
+        return reportRepository
+                .findAllByReportCreator(reportCreator)
+                .stream()
+                .map(reportMapper::toDto)
+                .toList();
     }
 }

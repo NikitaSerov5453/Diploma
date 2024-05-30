@@ -1,10 +1,10 @@
 package com.example.diploma.quartz.schedule;
 
 import com.example.diploma.dto.ReportDto;
-import com.example.diploma.quartz.job.EmailJob;
+import com.example.diploma.quartz.schedule.job.EmailJob;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import jakarta.persistence.Table;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -79,7 +79,6 @@ public class MailScheduleService {
                 jobDataMap.put("query[" + i + "][" + j + "]", reportDto.getSqlAuthorisations().get(i).getSqlRequests().get(j).getRequest());
             }
         }
-
         return JobBuilder.newJob(EmailJob.class)
                 .withIdentity(reportDto.getAutomatedReporting().toString(), reportDto.getName())
                 .requestRecovery(true)
@@ -152,9 +151,9 @@ public class MailScheduleService {
         }
     }
 
-    public void deleteSchedule(UUID scheduleId, UUID reportId) {
+    public void deleteSchedule(UUID scheduleId, String groupName) {
         try {
-            scheduler.deleteJob(new JobKey(scheduleId.toString(), reportId.toString()));
+            scheduler.deleteJob(new JobKey(scheduleId.toString(), groupName));
         } catch (SchedulerException e) {
             log.error("{} ошибка удаления планировщика", e.getMessage());
         }
