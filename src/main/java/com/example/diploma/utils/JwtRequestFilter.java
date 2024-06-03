@@ -1,6 +1,4 @@
-package com.example.diploma.config;
-
-import com.example.diploma.utils.JwtTokenUtils;
+package com.example.diploma.utils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -53,5 +51,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
+
     }
 }

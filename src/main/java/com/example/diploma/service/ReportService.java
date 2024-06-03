@@ -9,6 +9,7 @@ import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,15 +31,26 @@ public class ReportService {
 
     private final SQLAuthorisationService sqlAuthorisationService;
 
-    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
 
     public ReportDto createNewReport(ReportDto reportDto) {
         reportDto.setAutomatedReporting(UUID.randomUUID());
         mailScheduleService.createSchedule(reportDto);
-//        reportDto.setReportCreator(userService.getCurrentUser().getUsername());
+
+        for (int i = 0; i < reportDto.getSqlAuthorisations().size(); i++) {
+            reportDto
+                    .getSqlAuthorisations()
+                    .get(i)
+                    .setPassword(
+                    passwordEncoder.encode(reportDto
+                            .getSqlAuthorisations()
+                            .get(i)
+                            .getPassword()));
+        }
 
         Report entity = reportMapper.toEntity(reportDto);
+
         return reportMapper.toDto(reportRepository.save(entity));
     }
 
@@ -46,16 +58,15 @@ public class ReportService {
         addresseeService.deleteAllAddresseesByReportId(reportDto.getId());
         sqlAuthorisationService.deleteAllSQLAuthorisationByReportId(reportDto.getId());
         mailScheduleService.deleteSchedule(reportDto.getAutomatedReporting(), reportDto.getName());
-        Report entity = reportMapper.toEntity(reportDto);
-        mailScheduleService.createSchedule(reportDto);
 
-        return reportMapper.toDto(reportRepository.save(entity));
+        return createNewReport(reportDto);
     }
 
     public void deleteReport(UUID reportId) {
         Optional<Report> reportDto = reportRepository.findReportById(reportId);
         addresseeService.deleteAllAddresseesByReportId(reportDto.get().getId());
         sqlAuthorisationService.deleteAllSQLAuthorisationByReportId(reportDto.get().getId());
+        mailScheduleService.deleteSchedule(reportDto.get().getAutomatedReporting(), reportDto.get().getName());
         reportRepository.deleteById(reportId);
     }
 

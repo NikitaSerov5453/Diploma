@@ -60,6 +60,13 @@ CREATE TABLE IF NOT EXISTS "addresses" (
     report_id UUID
 );
 
+CREATE TABLE IF NOT EXISTS "refresh_token" (
+    id UUID,
+    expiry_date TIMESTAMP,
+    token VARCHAR (256),
+    user_id UUID
+);
+
 ALTER TABLE reports ADD COLUMN report_creator VARCHAR(40);
 
 

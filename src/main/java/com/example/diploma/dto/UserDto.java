@@ -22,6 +22,4 @@ public class UserDto {
     private RoleDto role;
 
     private EmployeeDto employee;
-
-//    private List<EmailConfigurationDto> emailConfiguration;
 }

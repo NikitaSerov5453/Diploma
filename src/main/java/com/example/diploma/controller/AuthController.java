@@ -1,6 +1,7 @@
 package com.example.diploma.controller;
 
-import com.example.diploma.dto.JwtRequestDto;
+import com.example.diploma.dto.jwt.JwtRequestDto;
+import com.example.diploma.dto.jwt.RefreshTokenRequestDto;
 import com.example.diploma.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -45,8 +46,8 @@ public class AuthController {
         return authService.createAuthToken(requestDto);
     }
 
-    @GetMapping
-    public String getAuthToken() {
-        return "вы авторизаваны";
+    @PostMapping("/refreshToken")
+    public ResponseEntity<?> updateAuthToken(@RequestBody RefreshTokenRequestDto requestDto) {
+        return authService.refreshAuthToken(requestDto);
     }
 }

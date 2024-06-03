@@ -1,4 +1,4 @@
-package com.example.diploma.test;
+package com.example.diploma.dto.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,10 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Request {
+@NoArgsConstructor
+public class JwtResponseDto {
 
-    private String request;
+    private String refreshToken;
+
+    private String token;
+
 }

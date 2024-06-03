@@ -14,16 +14,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
+
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -45,10 +43,8 @@ public class JwtTokenUtils {
 //        User user = userService.getUserByUsername(userDetails.getUsername()).get();
 //        claims.put("EmployeeName", user.getEmployee().getName());
 //        claims.put("EmployeeSurname", user.getEmployee().getLastName());
-//        claims.put("name", user.getUsername());
         Date issuedDate = new Date();
         Date expirationDate = new Date(issuedDate.getTime() + lifetime.toMillis());
-
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())
