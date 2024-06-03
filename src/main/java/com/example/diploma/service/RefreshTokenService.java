@@ -1,20 +1,18 @@
-package com.example.diploma.utils;
+package com.example.diploma.service;
 
 import com.example.diploma.entity.RefreshToken;
 import com.example.diploma.repository.RefreshTokenRepository;
-import com.example.diploma.repository.UserRepository;
-import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenUtils {
+public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -31,6 +29,14 @@ public class RefreshTokenUtils {
 
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
+    }
+
+    public List<RefreshToken> findByUserId(UUID userId) {
+        return refreshTokenRepository.findAllByUserId(userId);
+    }
+
+    public void deleteRefreshToken(RefreshToken refreshToken) {
+        refreshTokenRepository.delete(refreshToken);
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {

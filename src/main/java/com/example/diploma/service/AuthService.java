@@ -6,7 +6,6 @@ import com.example.diploma.dto.jwt.RefreshTokenRequestDto;
 import com.example.diploma.entity.RefreshToken;
 import com.example.diploma.exception.AppError;
 import com.example.diploma.utils.JwtTokenUtils;
-import com.example.diploma.utils.RefreshTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,7 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final RefreshTokenUtils refreshTokenUtils;
+    private final RefreshTokenService refreshTokenService;
 
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequestDto authRequest) {
         try {
@@ -37,7 +36,7 @@ public class AuthService {
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
-        RefreshToken refreshToken = refreshTokenUtils.createRefreshToken(authRequest.getUsername());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequest.getUsername());
         return ResponseEntity.ok(JwtResponseDto.builder()
                 .refreshToken(refreshToken.getToken())
                 .token(token)
@@ -47,8 +46,8 @@ public class AuthService {
 
     public ResponseEntity<?> refreshAuthToken(@RequestBody RefreshTokenRequestDto refreshTokenRequest) {
         UserDetails userDetails = userService.loadUserByUsername(refreshTokenRequest.getUserName());
-        return refreshTokenUtils.findByToken(refreshTokenRequest.getRefreshToken())
-                .map(refreshTokenUtils::verifyExpiration)
+        return refreshTokenService.findByToken(refreshTokenRequest.getRefreshToken())
+                .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     String authToken = jwtTokenUtils.generateToken(userDetails);

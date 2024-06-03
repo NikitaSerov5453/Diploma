@@ -8,6 +8,8 @@ import jakarta.validation.ValidationException;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.context.annotation.Role;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,24 +25,20 @@ public class UserController {
 
     private final UserValidator userValidator;
 
-    @PostMapping
-    public UserDto addUser(@RequestBody UserDto userDto, BindingResult bindingResult) {
-        userValidator.validate(userDto, bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new ValidationException("Имя пользователя уже занято: " + userDto.getUsername());
-        }
+//    @PostMapping
+//    @Secured("ROLE_ADMIN")
+//    public UserDto addUser(@RequestBody UserDto userDto, BindingResult bindingResult) {
+//        userValidator.validate(userDto, bindingResult);
+//        if (bindingResult.hasErrors()) {
+//            throw new ValidationException("Имя пользователя уже занято: " + userDto.getUsername());
+//        }
+//
+//        return userService.addUser(userDto);
+//    }
 
-        return userService.addUser(userDto);
-    }
-
-    @GetMapping("/current")
-    public UserDto getCurrentUser() {
-        return userService.getCurrentUser();
-    }
-
-    @GetMapping
-    public List<UserDto> getUser() {
-        return userService.getAllUsers();
-    }
+//    @GetMapping
+//    public List<UserDto> getUser() {
+//        return userService.getAllUsers();
+//    }
 
 }
