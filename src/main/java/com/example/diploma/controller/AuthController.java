@@ -21,21 +21,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/unsecured")
-    public String unsecuredData() {
-        return "unsecured";
-    }
-
-    @GetMapping("/secured")
-    public String securedData() {
-        return "secured";
-    }
-
-    @GetMapping("/admin")
-    public String adminData() {
-        return "admin";
-    }
-
     @GetMapping("/info")
     public String userData(Principal principal) {
         return principal.getName();

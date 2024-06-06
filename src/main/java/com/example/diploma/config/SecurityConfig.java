@@ -62,8 +62,6 @@ public class SecurityConfig {
         return new ProviderManager(daoAuthenticationProvider);
     }
 
-
-
     @Bean
     public AccessDeniedHandler deniedHandler() {
         return (request, response, accessDeniedException) -> {
@@ -75,22 +73,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-//                        .requestMatchers("/","/login", "/logout").permitAll()
-//                        .requestMatchers("/reports", "/admin", "/reports/undefined").hasRole("ADMIN")
-//                        .requestMatchers("/reports").hasRole("USER")
-                        .anyRequest().permitAll())
-//                .formLogin(withDefaults())
+                        .requestMatchers("/login", "/logout", "/login/refreshToken").permitAll()
+                        .requestMatchers("/reports/**","/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/reports/**", "/login/**").hasRole("USER")
+                        .anyRequest().authenticated())
                 .sessionManagement(sessionManagementCustomizer -> sessionManagementCustomizer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .formLogin(formLogin -> formLogin
-//                        .loginPage("/login")
-//                        .successHandler(successHandler())
-//                        .permitAll())
                 .userDetailsService(userDetailsService)
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(deniedHandler()))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-//                .logout(LogoutConfigurer::permitAll);
 
         return http.build();
     }

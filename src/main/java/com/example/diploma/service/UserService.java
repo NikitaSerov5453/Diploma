@@ -65,7 +65,9 @@ public class UserService implements UserDetailsService {
     public UserDto updateUser(Optional<User> userEntity, UserDto userDto) {
         userEntity.get().setUsername(userDto.getUsername());
         userEntity.get().getRole().setRoleType(userDto.getRole().getRoleType());
-        userEntity.get().setPassword(passwordEncoder.encode(userDto.getPassword()));
+        if (!userEntity.get().getPassword().equals(userDto.getPassword())) {
+            userEntity.get().setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
         userEntity.get().getEmployee().setName(userDto.getEmployee().getName());
         userEntity.get().getEmployee().setLastName(userDto.getEmployee().getLastName());
         userEntity.get().getEmployee().setPatronymicName(userDto.getEmployee().getPatronymicName());
