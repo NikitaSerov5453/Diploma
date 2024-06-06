@@ -19,6 +19,8 @@ public class UserDto {
 
     private String password;
 
+    private Boolean isLocked;
+
     private RoleDto role;
 
     private EmployeeDto employee;
