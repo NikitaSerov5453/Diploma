@@ -69,7 +69,7 @@ public class AdminController {
             }
         }
 
-        return userService.updateUser(userEntity, userDto);
+        return userService.updateUser(userEntity.get(), userDto);
     }
 
 }

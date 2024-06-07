@@ -2,7 +2,6 @@ package com.example.diploma.service;
 
 import com.example.diploma.dto.RoleDto;
 import com.example.diploma.dto.UserDto;
-import com.example.diploma.entity.RefreshToken;
 import com.example.diploma.entity.Role;
 import com.example.diploma.entity.User;
 import com.example.diploma.mapper.UserMapper;
@@ -10,10 +9,7 @@ import com.example.diploma.repository.RoleRepository;
 import com.example.diploma.repository.UserRepository;
 
 import com.example.diploma.security.AuthUser;
-import com.example.diploma.validation.UserValidator;
 import jakarta.transaction.Transactional;
-import jakarta.validation.ValidationException;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,8 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +34,6 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder;
-
-//    private final RefreshTokenService refreshTokenService;
 
     public UserDto addUser(UserDto userDto) {
         RoleDto role = userDto.getRole();
@@ -62,17 +54,17 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public UserDto updateUser(Optional<User> userEntity, UserDto userDto) {
-        userEntity.get().setUsername(userDto.getUsername());
-        userEntity.get().getRole().setRoleType(userDto.getRole().getRoleType());
-        if (!userEntity.get().getPassword().equals(userDto.getPassword())) {
-            userEntity.get().setPassword(passwordEncoder.encode(userDto.getPassword()));
+    public UserDto updateUser(User user, UserDto userDto) {
+        user.setUsername(userDto.getUsername());
+        user.getRole().setRoleType(userDto.getRole().getRoleType());
+        if (!user.getPassword().equals(userDto.getPassword())) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         }
-        userEntity.get().getEmployee().setName(userDto.getEmployee().getName());
-        userEntity.get().getEmployee().setLastName(userDto.getEmployee().getLastName());
-        userEntity.get().getEmployee().setPatronymicName(userDto.getEmployee().getPatronymicName());
+        user.getEmployee().setName(userDto.getEmployee().getName());
+        user.getEmployee().setLastName(userDto.getEmployee().getLastName());
+        user.getEmployee().setPatronymicName(userDto.getEmployee().getPatronymicName());
 
-        return userMapper.toDto(userRepository.save(userEntity.get()));
+        return userMapper.toDto(userRepository.save(user));
     }
 
     public List<UserDto> getAllUsers() {

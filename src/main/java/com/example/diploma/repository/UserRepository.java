@@ -1,7 +1,6 @@
 package com.example.diploma.repository;
 
 
-import com.example.diploma.dto.UserDto;
 import com.example.diploma.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,8 +15,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("FROM User u JOIN FETCH u.role WHERE u.username = :username")
     Optional<User> findByUsername(String username);
-
-//    Optional<User> findByUsername(String username);
 
     @Query("FROM User u JOIN FETCH u.role")
     List<User> findAll();

@@ -62,6 +62,7 @@ public class MailScheduleService {
 
     private JobDetail jobDetail(ReportDto reportDto) {
         JobDataMap jobDataMap = new JobDataMap();
+//        jobDataMap.put("reportDto", reportDto);
 
         jobDataMap.put("name", reportDto.getName());
         jobDataMap.put("addressesSize", String.valueOf(reportDto.getAddresses().size()));
@@ -109,13 +110,12 @@ public class MailScheduleService {
     /*
     Подключение к сторонней БД
      */
-    public Statement statement(String url, String login, String password) {
+    public Connection connection(String url, String login, String password) {
         try {
-            Connection connection = DriverManager.getConnection(
+            return DriverManager.getConnection(
                     url,
                     login,
                     password);
-            return connection.createStatement();
         } catch (SQLException e) {
             log.error(e.getMessage());
             return null;

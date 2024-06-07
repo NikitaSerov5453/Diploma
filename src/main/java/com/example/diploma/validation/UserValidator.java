@@ -2,7 +2,6 @@ package com.example.diploma.validation;
 
 import com.example.diploma.dto.UserDto;
 import com.example.diploma.entity.User;
-import com.example.diploma.repository.UserRepository;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

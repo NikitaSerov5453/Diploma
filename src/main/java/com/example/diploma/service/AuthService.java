@@ -41,7 +41,6 @@ public class AuthService {
                 .refreshToken(refreshToken.getToken())
                 .token(token)
                 .build());
-
     }
 
     public ResponseEntity<?> refreshAuthToken(@RequestBody RefreshTokenRequestDto refreshTokenRequest) {

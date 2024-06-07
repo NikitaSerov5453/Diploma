@@ -1,7 +1,6 @@
 package com.example.diploma.validation;
 
 import com.example.diploma.dto.RoleDto;
-import com.example.diploma.repository.RoleRepository;
 import com.example.diploma.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

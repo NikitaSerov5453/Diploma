@@ -1,6 +1,5 @@
 package com.example.diploma.entity;
 
-import com.example.diploma.dto.ReportDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

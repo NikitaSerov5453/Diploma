@@ -21,9 +21,6 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    private final MailScheduleService mailScheduleService;
-
-
     @PostMapping("/undefined")
     public ReportDto addReport(@Valid @RequestBody ReportDto reportDto) {
         return reportService.createNewReport(reportDto);
@@ -42,22 +39,6 @@ public class ReportController {
     @GetMapping("/{id}")
     public Optional<ReportDto> getReportById(@PathVariable("id") UUID id) {
         return reportService.getReportByReportId(id);
-    }
-
-    @GetMapping("/running")
-    public List<ReportDto> getAllRunning() {
-        return mailScheduleService.getReportDtos();
-    }
-
-    @GetMapping("/running/{id}")
-    private ReportDto getRunningReportById(@PathVariable("id") String id) {
-        return mailScheduleService.getReportDto(id);
-    }
-
-    @PutMapping("/running/stop/{id}")
-    public void stopReport(@PathVariable("id") UUID id) {
-        Optional<ReportDto> reportDto = reportService.getReportByReportId(id);
-        mailScheduleService.stopSchedule(reportDto.get().getAutomatedReporting(), reportDto.get().getId());
     }
 
     @PutMapping("/update")

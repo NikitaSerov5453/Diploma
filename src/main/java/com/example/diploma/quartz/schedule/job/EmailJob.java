@@ -1,19 +1,18 @@
 package com.example.diploma.quartz.schedule.job;
 
+import com.example.diploma.dto.ReportDto;
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.service.MailSenderService;
-import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -40,12 +39,16 @@ public class EmailJob implements Job {
         log.info("Executing Job with key {}", jobExecutionContext.getJobDetail().getKey());
 
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
+//        Object reportDto = jobDataMap.get("reportDto");
+//        System.out.println(reportDto);
+//        System.out.println(reportDto.getClass().getName());
 
         int addressesSize = Integer.parseInt(jobDataMap.getString("addressesSize"));
         int authorisationsSize = Integer.parseInt(jobDataMap.getString("authorisationsSize"));
 
         String[] addresses = new String[addressesSize];
         List<Statement> statements = new ArrayList<>();
+        List<Connection> connections = new ArrayList<>();
         List<List<String>> queries = new ArrayList<>(authorisationsSize);
         List<Integer> queriesSize = new ArrayList<>();
 
@@ -65,11 +68,16 @@ public class EmailJob implements Job {
         }
 
         for (int i = 0; i < authorisationsSize; i++) {
-            statements.add(mailScheduleService.statement(
+            Connection connection = mailScheduleService.connection(
                     jobDataMap.getString("url[" + i + "]"),
                     jobDataMap.getString("login[" + i + "]"),
-                    jobDataMap.getString("password[" + i + "]"))
-            );
+                    jobDataMap.getString("password[" + i + "]"));
+            connections.add(connection);
+            try {
+                statements.add(connection.createStatement());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         for (int i = 0; i < authorisationsSize; i++) {
@@ -87,6 +95,13 @@ public class EmailJob implements Job {
                 }
             }
             mailSenderService.sendMail(mailProperties.getUsername(), addresses, name, htmlTable.toString());
+        }
+        for (Connection connection : connections) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

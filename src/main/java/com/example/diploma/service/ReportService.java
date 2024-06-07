@@ -1,9 +1,7 @@
 package com.example.diploma.service;
 
 import com.example.diploma.dto.*;
-import com.example.diploma.entity.Addressee;
 import com.example.diploma.entity.Report;
-import com.example.diploma.entity.SQLAuthorisation;
 import com.example.diploma.mapper.ReportMapper;
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.repository.ReportRepository;

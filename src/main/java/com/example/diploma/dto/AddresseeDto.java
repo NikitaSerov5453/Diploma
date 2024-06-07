@@ -16,6 +16,4 @@ public class AddresseeDto {
     private UUID id;
 
     private String email;
-
-
 }
