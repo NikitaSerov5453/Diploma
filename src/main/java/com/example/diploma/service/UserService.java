@@ -4,11 +4,12 @@ import com.example.diploma.dto.RoleDto;
 import com.example.diploma.dto.UserDto;
 import com.example.diploma.entity.Role;
 import com.example.diploma.entity.User;
-import com.example.diploma.mapper.UserMapper;
+import com.example.diploma.security.mapper.UserMapper;
 import com.example.diploma.repository.RoleRepository;
 import com.example.diploma.repository.UserRepository;
 
 import com.example.diploma.security.AuthUser;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

@@ -3,7 +3,7 @@ package com.example.diploma.controller;
 import com.example.diploma.dto.UserDto;
 import com.example.diploma.entity.RefreshToken;
 import com.example.diploma.entity.User;
-import com.example.diploma.mapper.UserMapper;
+import com.example.diploma.security.mapper.UserMapper;
 import com.example.diploma.service.RefreshTokenService;
 import com.example.diploma.service.UserService;
 import com.example.diploma.validation.UserValidator;

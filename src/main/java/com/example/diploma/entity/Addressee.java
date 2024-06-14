@@ -27,5 +27,4 @@ public class Addressee {
 
     @Column(name = "report_id")
     private UUID reportId;
-
 }

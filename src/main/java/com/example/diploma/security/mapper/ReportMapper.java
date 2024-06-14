@@ -1,16 +1,17 @@
-package com.example.diploma.mapper;
+package com.example.diploma.security.mapper;
 
-import com.example.diploma.dto.EmployeeDto;
-import com.example.diploma.entity.Employee;
+import com.example.diploma.dto.ReportDto;
+import com.example.diploma.entity.Report;
+
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface EmployeeMapper {
+public interface ReportMapper {
 
-    EmployeeDto toDto(Employee employee);
+    ReportDto toDto(Report report);
 
-    Employee toEntity(EmployeeDto employeeDto);
+    Report toEntity(ReportDto reportDto);
 }

@@ -1,17 +1,16 @@
-package com.example.diploma.mapper;
+package com.example.diploma.security.mapper;
 
-import com.example.diploma.dto.AddresseeDto;
-import com.example.diploma.entity.Addressee;
+import com.example.diploma.dto.UserDto;
+import com.example.diploma.entity.User;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface AddresseeMapper {
+public interface UserMapper {
 
-    AddresseeDto toDto(Addressee addressee);
+    UserDto toDto(User user);
 
-    Addressee toEntity(AddresseeDto addresseeDto);
-
+    User toEntity(UserDto userDto);
 }

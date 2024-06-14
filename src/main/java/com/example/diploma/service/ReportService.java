@@ -2,7 +2,7 @@ package com.example.diploma.service;
 
 import com.example.diploma.dto.*;
 import com.example.diploma.entity.Report;
-import com.example.diploma.mapper.ReportMapper;
+import com.example.diploma.security.mapper.ReportMapper;
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
@@ -77,8 +77,10 @@ public class ReportService {
     }
 
     public Optional<ReportDto> getReportByReportId(UUID reportId) {
+//        return reportEntityManagerRepository.findReportById(reportId).map(reportMapper::toDto);
         return reportRepository.findReportById(reportId).map(reportMapper::toDto);
     }
+
 
     public List<ReportDto> getAllReportsByReportCreator(String reportCreator) {
         return reportRepository

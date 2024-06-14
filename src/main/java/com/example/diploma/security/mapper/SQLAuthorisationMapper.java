@@ -1,4 +1,4 @@
-package com.example.diploma.mapper;
+package com.example.diploma.security.mapper;
 
 import com.example.diploma.dto.SQLAuthorisationDto;
 import com.example.diploma.entity.SQLAuthorisation;
