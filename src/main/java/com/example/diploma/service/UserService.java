@@ -2,9 +2,10 @@ package com.example.diploma.service;
 
 import com.example.diploma.dto.RoleDto;
 import com.example.diploma.dto.UserDto;
+import com.example.diploma.dto.view.UserView;
 import com.example.diploma.entity.Role;
 import com.example.diploma.entity.User;
-import com.example.diploma.security.mapper.UserMapper;
+import com.example.diploma.mapper.UserMapper;
 import com.example.diploma.repository.RoleRepository;
 import com.example.diploma.repository.UserRepository;
 
@@ -55,15 +56,15 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public UserDto updateUser(User user, UserDto userDto) {
-        user.setUsername(userDto.getUsername());
-        user.getRole().setRoleType(userDto.getRole().getRoleType());
-        if (!user.getPassword().equals(userDto.getPassword())) {
-            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+    public UserDto updateUser(User user, UserView userView) {
+        user.setUsername(userView.getUsername());
+        user.getRole().setRoleType(userView.getRole().getRoleType());
+        if (!user.getPassword().equals(userView.getPassword())) {
+            user.setPassword(passwordEncoder.encode(userView.getPassword()));
         }
-        user.getEmployee().setName(userDto.getEmployee().getName());
-        user.getEmployee().setLastName(userDto.getEmployee().getLastName());
-        user.getEmployee().setPatronymicName(userDto.getEmployee().getPatronymicName());
+        user.getEmployee().setName(userView.getEmployee().getName());
+        user.getEmployee().setLastName(userView.getEmployee().getLastName());
+        user.getEmployee().setPatronymicName(userView.getEmployee().getPatronymicName());
 
         return userMapper.toDto(userRepository.save(user));
     }
@@ -80,6 +81,10 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> getUserById(UUID id) {
         return userRepository.findUserById(id);
+    }
+
+    public Optional<UserView> findUserById(UUID id) {
+        return userRepository.findUserByUserID(id);
     }
 
     public Boolean banUnbanUser(UUID id) {
@@ -109,5 +114,13 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username)
                 .map(AuthUser::new)
                 .orElseThrow(() -> new UsernameNotFoundException("err"));
+    }
+
+    public List<UserView> findAllUsers() {
+        return userRepository.findAllUsers();
+    }
+
+    public Optional<UserView> findUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
     }
 }

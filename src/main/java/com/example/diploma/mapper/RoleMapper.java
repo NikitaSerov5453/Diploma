@@ -1,4 +1,4 @@
-package com.example.diploma.security.mapper;
+package com.example.diploma.mapper;
 
 import com.example.diploma.dto.RoleDto;
 import com.example.diploma.entity.Role;

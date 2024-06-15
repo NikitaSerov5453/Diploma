@@ -1,7 +1,7 @@
 package com.example.diploma.service;
 
 import com.example.diploma.entity.Role;
-import com.example.diploma.security.mapper.RoleMapper;
+import com.example.diploma.mapper.RoleMapper;
 import com.example.diploma.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

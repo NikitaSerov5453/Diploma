@@ -1,6 +1,7 @@
 package com.example.diploma.validation;
 
 import com.example.diploma.dto.UserDto;
+import com.example.diploma.dto.view.UserView;
 import com.example.diploma.entity.User;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;

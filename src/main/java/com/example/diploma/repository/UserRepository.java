@@ -12,13 +12,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, UUID>, CustomUserRepository{
 
-    @Query("FROM User u JOIN FETCH u.role WHERE u.username = :username")
+    @Query("FROM User u LEFT JOIN FETCH u.role WHERE u.username = :username")
     Optional<User> findByUsername(@Param("username") String username);
-
-    @Query("FROM User u JOIN FETCH u.role")
-    List<User> findAll();
-
-    Optional<User> findUserById(UUID id);
+//
+//    @Query("FROM User u JOIN FETCH u.role")
+//    List<User> findAll();
+//
+    @Query("FROM User u LEFT JOIN FETCH u.role WHERE u.id = :id")
+    Optional<User> findUserById(@Param("id") UUID id);
 }

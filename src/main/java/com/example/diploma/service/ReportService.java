@@ -4,7 +4,7 @@ package com.example.diploma.service;
 import com.example.diploma.dto.*;
 import com.example.diploma.dto.view.ReportView;
 import com.example.diploma.entity.Report;
-import com.example.diploma.security.mapper.ReportMapper;
+import com.example.diploma.mapper.ReportMapper;
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.repository.ReportRepository;
 import jakarta.transaction.Transactional;
@@ -33,7 +33,6 @@ public class ReportService {
     private final SQLAuthorisationService sqlAuthorisationService;
 
     private final PasswordEncoder passwordEncoder;
-
 
     public ReportDto createNewReport(ReportDto reportDto) {
         reportDto.setAutomatedReporting(UUID.randomUUID());

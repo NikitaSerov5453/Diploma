@@ -1,9 +1,9 @@
 package com.example.diploma.controller;
 
 import com.example.diploma.dto.UserDto;
+import com.example.diploma.dto.view.UserView;
 import com.example.diploma.entity.RefreshToken;
 import com.example.diploma.entity.User;
-import com.example.diploma.security.mapper.UserMapper;
 import com.example.diploma.service.RefreshTokenService;
 import com.example.diploma.service.UserService;
 import com.example.diploma.validation.UserValidator;
@@ -28,18 +28,16 @@ public class AdminController {
 
     private final UserValidator userValidator;
 
-    private final UserMapper userMapper;
-
     private final RefreshTokenService refreshTokenService;
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers();
+    public List<UserView> getAllUsers() {
+        return userService.findAllUsers();
     }
 
     @GetMapping("/user/{id}")
-    public Optional<UserDto> getUserById(@PathVariable UUID id) {
-        return userService.getUserById(id).map(userMapper::toDto);
+    public Optional<UserView> getUserById(@PathVariable UUID id) {
+        return userService.findUserById(id);
     }
 
     @PutMapping("/ban/{id}")
@@ -60,16 +58,16 @@ public class AdminController {
     }
 
     @PutMapping("/update/{id}")
-    public UserDto updateUser(@PathVariable UUID id, @RequestBody UserDto userDto, BindingResult bindingResult) {
+    public UserDto updateUser(@PathVariable UUID id, @RequestBody UserView userView, BindingResult bindingResult) {
         Optional<User> userEntity = userService.getUserById(id);
-        if (!userEntity.get().getUsername().equals(userDto.getUsername())) {
-            userValidator.validate(userDto, bindingResult);
+
+        if (!userEntity.get().getUsername().equals(userView.getUsername())) {
+            userValidator.validate(userView, bindingResult);
             if (bindingResult.hasErrors()) {
-                throw new ValidationException("Имя пользователя уже занято: " + userDto.getUsername());
+                throw new ValidationException("Имя пользователя уже занято: " + userView.getUsername());
             }
         }
 
-        return userService.updateUser(userEntity.get(), userDto);
+        return userService.updateUser(userEntity.get(), userView);
     }
-
 }

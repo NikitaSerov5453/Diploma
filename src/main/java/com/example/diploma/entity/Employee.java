@@ -2,7 +2,6 @@ package com.example.diploma.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.UUID;
 
@@ -26,6 +25,5 @@ public class Employee {
 
     @Column(name = "patronymic_name")
     private String patronymicName;
-
 
 }
