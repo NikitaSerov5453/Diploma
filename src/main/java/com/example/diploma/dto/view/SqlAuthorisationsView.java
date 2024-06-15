@@ -1,11 +1,10 @@
-package com.example.diploma.blaze.view;
+package com.example.diploma.dto.view;
 
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.FetchStrategy;
 import com.blazebit.persistence.view.IdMapping;
 import com.blazebit.persistence.view.Mapping;
 import com.example.diploma.entity.SQLAuthorisation;
-import com.example.diploma.entity.SQLRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,8 +20,6 @@ public interface SqlAuthorisationsView {
     String getLogin();
 
     String getPassword();
-
-    UUID getReportId();
 
     @Mapping(fetch = FetchStrategy.MULTISET)
     List<SQLRequestView> getSqlRequests();

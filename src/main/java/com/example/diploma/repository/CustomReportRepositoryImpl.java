@@ -1,10 +1,10 @@
-package com.example.diploma.blaze.repository;
+package com.example.diploma.repository;
 
 
 import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
-import com.example.diploma.blaze.view.ReportView;
+import com.example.diploma.dto.view.ReportView;
 import com.example.diploma.entity.Report;
 import jakarta.persistence.EntityManager;
 
@@ -23,20 +23,9 @@ public class CustomReportRepositoryImpl implements CustomReportRepository {
 
     private final EntityViewManager entityViewManager;
 
-    @Override
-    public Optional<Report> findByReportId(UUID id) {
-
-        return Optional.ofNullable(criteriaBuilderFactory
-                .create(entityManager, Report.class)
-                .where("id")
-                .eq(id)
-//                .fetch("addresses")
-                .fetch("sqlAuthorisations")
-                .getSingleResult());
-    }
 
     @Override
-    public Optional<ReportView> searchByReportViewId(UUID id) {
+    public Optional<ReportView> findReportByReportId(UUID id) {
         return Optional.ofNullable(entityViewManager.applySetting(
                         EntityViewSetting.create(ReportView.class),
                         criteriaBuilderFactory.create(entityManager, Report.class))
@@ -45,27 +34,23 @@ public class CustomReportRepositoryImpl implements CustomReportRepository {
                 .getSingleResult());
     }
 
-
-
-
-    @Override
-    public List<Report> findAllReports() {
-        return criteriaBuilderFactory
-                .create(entityManager, Report.class)
-                .from(Report.class)
-//                .leftJoinFetch("addresses", "a")
-                .fetch("addresses")
-//                .fetch("sqlAuthorisations")
-                .getResultList();
-    }
-
-
     @Override
     public List<ReportView> findAllReportsView() {
         return entityViewManager.applySetting(
                 EntityViewSetting.create(ReportView.class),
                 criteriaBuilderFactory.create(entityManager, Report.class))
                 .from(Report.class)
+                .getResultList();
+    }
+
+    @Override
+    public List<ReportView> findReportsByReportCreator(String reportCreator) {
+        return entityViewManager.applySetting(
+                EntityViewSetting.create(ReportView.class),
+                criteriaBuilderFactory.create(entityManager, Report.class))
+                .from(Report.class)
+                .where("reportCreator")
+                .eq(reportCreator)
                 .getResultList();
     }
 }

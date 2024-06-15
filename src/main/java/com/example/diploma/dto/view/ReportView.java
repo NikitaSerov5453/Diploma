@@ -1,10 +1,11 @@
-package com.example.diploma.blaze.view;
+package com.example.diploma.dto.view;
 
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.FetchStrategy;
 import com.blazebit.persistence.view.IdMapping;
 import com.blazebit.persistence.view.Mapping;
 import com.example.diploma.entity.Report;
+
 
 import java.util.List;
 import java.util.UUID;

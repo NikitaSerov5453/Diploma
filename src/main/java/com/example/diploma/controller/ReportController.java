@@ -1,7 +1,7 @@
 package com.example.diploma.controller;
 
+import com.example.diploma.dto.view.ReportView;
 import com.example.diploma.dto.ReportDto;
-import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.service.ReportService;
 
 import jakarta.validation.Valid;
@@ -27,18 +27,18 @@ public class ReportController {
     }
 
     @GetMapping
-    public List<ReportDto> getAllReports() {
-        return reportService.getAllReports();
+    public List<ReportView> getAllReports() {
+        return reportService.findReports();
     }
 
     @GetMapping("/all/{reportCreator}")
-    public List<ReportDto> getReportsByReportCreator(@PathVariable("reportCreator") String reportCreator) {
-        return reportService.getAllReportsByReportCreator(reportCreator);
+    public List<ReportView> getReportsByReportCreator(@PathVariable("reportCreator") String reportCreator) {
+        return reportService.findReportsByReportCreator(reportCreator);
     }
 
     @GetMapping("/{id}")
-    public Optional<ReportDto> getReportById(@PathVariable("id") UUID id) {
-        return reportService.getReportByReportId(id);
+    public Optional<ReportView> getReportById(@PathVariable("id") UUID id) {
+        return reportService.findReportById(id);
     }
 
     @PutMapping("/update")

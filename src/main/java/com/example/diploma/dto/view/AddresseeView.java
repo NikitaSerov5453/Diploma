@@ -1,4 +1,4 @@
-package com.example.diploma.blaze.view;
+package com.example.diploma.dto.view;
 
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.IdMapping;
@@ -13,6 +13,4 @@ public interface AddresseeView {
     UUID getId();
 
     String getEmail();
-
-    UUID getReportId();
 }

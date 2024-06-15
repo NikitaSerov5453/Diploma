@@ -1,10 +1,13 @@
 package com.example.diploma.service;
 
+
 import com.example.diploma.dto.*;
+import com.example.diploma.dto.view.ReportView;
 import com.example.diploma.entity.Report;
 import com.example.diploma.security.mapper.ReportMapper;
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.repository.ReportRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +19,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-
+@Transactional
 public class ReportService {
 
     private final ReportRepository reportRepository;
@@ -61,32 +64,23 @@ public class ReportService {
     }
 
     public void deleteReport(UUID reportId) {
-        Optional<Report> reportDto = reportRepository.findReportById(reportId);
-        addresseeService.deleteAllAddresseesByReportId(reportDto.get().getId());
-        sqlAuthorisationService.deleteAllSQLAuthorisationByReportId(reportDto.get().getId());
-        mailScheduleService.deleteSchedule(reportDto.get().getAutomatedReporting(), reportDto.get().getName());
+        Optional<ReportView> reportView = reportRepository.findReportByReportId(reportId);
+
+        addresseeService.deleteAllAddresseesByReportId(reportView.get().getId());
+        sqlAuthorisationService.deleteAllSQLAuthorisationByReportId(reportView.get().getId());
+        mailScheduleService.deleteSchedule(reportView.get().getAutomatedReporting(), reportView.get().getName());
         reportRepository.deleteById(reportId);
     }
 
-    public List<ReportDto> getAllReports() {
-        return reportRepository
-                .findAll()
-                .stream()
-                .map(reportMapper::toDto)
-                .toList();
+    public List<ReportView> findReports() {
+        return reportRepository.findAllReportsView();
     }
 
-    public Optional<ReportDto> getReportByReportId(UUID reportId) {
-//        return reportEntityManagerRepository.findReportById(reportId).map(reportMapper::toDto);
-        return reportRepository.findReportById(reportId).map(reportMapper::toDto);
+    public List<ReportView> findReportsByReportCreator(String reportCreator) {
+        return reportRepository.findReportsByReportCreator(reportCreator);
     }
 
-
-    public List<ReportDto> getAllReportsByReportCreator(String reportCreator) {
-        return reportRepository
-                .findAllByReportCreator(reportCreator)
-                .stream()
-                .map(reportMapper::toDto)
-                .toList();
+    public Optional<ReportView> findReportById(UUID id) {
+        return reportRepository.findReportByReportId(id);
     }
 }

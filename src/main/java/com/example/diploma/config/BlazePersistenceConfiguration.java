@@ -1,4 +1,4 @@
-package com.example.diploma.blaze.config;
+package com.example.diploma.config;
 
 
 import com.blazebit.persistence.Criteria;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
 @Configuration
-@EnableEntityViews("com.example.diploma.blaze.view")
+@EnableEntityViews("com.example.diploma.dto.view")
 public class BlazePersistenceConfiguration {
 
     @PersistenceUnit
@@ -28,14 +28,13 @@ public class BlazePersistenceConfiguration {
     @Lazy(false)
     public CriteriaBuilderFactory createCriteriaBuilderFactory() {
         CriteriaBuilderConfiguration config = Criteria.getDefault();
-        // do some configuration
+
         return config.createCriteriaBuilderFactory(entityManagerFactory);
     }
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     @Lazy(false)
-    // inject the criteria builder factory which will be used along with the entity view manager
     public EntityViewManager createEntityViewManager(CriteriaBuilderFactory cbf, EntityViewConfiguration entityViewConfiguration) {
         return entityViewConfiguration.createEntityViewManager(cbf);
     }
