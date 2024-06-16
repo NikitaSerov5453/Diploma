@@ -56,15 +56,15 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public UserDto updateUser(User user, UserView userView) {
-        user.setUsername(userView.getUsername());
-        user.getRole().setRoleType(userView.getRole().getRoleType());
-        if (!user.getPassword().equals(userView.getPassword())) {
-            user.setPassword(passwordEncoder.encode(userView.getPassword()));
+    public UserDto updateUser(User user, UserDto userDto) {
+        user.setUsername(userDto.getUsername());
+        user.getRole().setRoleType(userDto.getRole().getRoleType());
+        if (!user.getPassword().equals(userDto.getPassword())) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         }
-        user.getEmployee().setName(userView.getEmployee().getName());
-        user.getEmployee().setLastName(userView.getEmployee().getLastName());
-        user.getEmployee().setPatronymicName(userView.getEmployee().getPatronymicName());
+        user.getEmployee().setName(userDto.getEmployee().getName());
+        user.getEmployee().setLastName(userDto.getEmployee().getLastName());
+        user.getEmployee().setPatronymicName(userDto.getEmployee().getPatronymicName());
 
         return userMapper.toDto(userRepository.save(user));
     }

@@ -58,16 +58,16 @@ public class AdminController {
     }
 
     @PutMapping("/update/{id}")
-    public UserDto updateUser(@PathVariable UUID id, @RequestBody UserView userView, BindingResult bindingResult) {
+    public UserDto updateUser(@PathVariable UUID id, @RequestBody UserDto userDto, BindingResult bindingResult) {
         Optional<User> userEntity = userService.getUserById(id);
 
-        if (!userEntity.get().getUsername().equals(userView.getUsername())) {
-            userValidator.validate(userView, bindingResult);
+        if (!userEntity.get().getUsername().equals(userDto.getUsername())) {
+            userValidator.validate(userDto, bindingResult);
             if (bindingResult.hasErrors()) {
-                throw new ValidationException("Имя пользователя уже занято: " + userView.getUsername());
+                throw new ValidationException("Имя пользователя уже занято: " + userDto.getUsername());
             }
         }
 
-        return userService.updateUser(userEntity.get(), userView);
+        return userService.updateUser(userEntity.get(), userDto);
     }
 }

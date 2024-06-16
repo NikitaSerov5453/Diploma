@@ -20,10 +20,8 @@ public interface UserView {
 
     Boolean getIsLocked();
 
-    @Mapping(fetch = FetchStrategy.MULTISET)
     RoleView getRole();
 
-    @Mapping(fetch = FetchStrategy.MULTISET)
     EmployeeView getEmployee();
 
 }

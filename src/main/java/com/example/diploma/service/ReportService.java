@@ -38,16 +38,6 @@ public class ReportService {
         reportDto.setAutomatedReporting(UUID.randomUUID());
         mailScheduleService.createSchedule(reportDto);
 
-        for (int i = 0; i < reportDto.getSqlAuthorisations().size(); i++) {
-            reportDto
-                    .getSqlAuthorisations()
-                    .get(i)
-                    .setPassword(
-                    passwordEncoder.encode(reportDto
-                            .getSqlAuthorisations()
-                            .get(i)
-                            .getPassword()));
-        }
 
         Report entity = reportMapper.toEntity(reportDto);
 
@@ -56,10 +46,34 @@ public class ReportService {
 
     public ReportDto updateReport(ReportDto reportDto) {
         addresseeService.deleteAllAddresseesByReportId(reportDto.getId());
-        sqlAuthorisationService.deleteAllSQLAuthorisationByReportId(reportDto.getId());
         mailScheduleService.deleteSchedule(reportDto.getAutomatedReporting(), reportDto.getName());
 
-        return createNewReport(reportDto);
+        reportDto.setAutomatedReporting(UUID.randomUUID());
+        mailScheduleService.createSchedule(reportDto);
+
+        for (int i = 0; i < reportDto.getSqlAuthorisations().size(); i++) {
+            if (!reportDto.getSqlAuthorisations()
+                    .get(i)
+                    .getPassword()
+                    .equals(reportRepository
+                            .findReportByReportId(reportDto.getId())
+                            .get()
+                            .getSqlAuthorisations()
+                            .get(i).getPassword())) {
+                reportDto.getSqlAuthorisations()
+                        .get(i)
+                        .setPassword(passwordEncoder.encode(reportDto
+                                .getSqlAuthorisations()
+                                .get(i)
+                                .getPassword()));
+            }
+        }
+
+        sqlAuthorisationService.deleteAllSQLAuthorisationByReportId(reportDto.getId());
+
+        Report entity = reportMapper.toEntity(reportDto);
+
+        return reportMapper.toDto(reportRepository.save(entity));
     }
 
     public void deleteReport(UUID reportId) {

@@ -130,14 +130,23 @@ public class MailScheduleService {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<table style=\"border: 1px solid #000000; border-collapse: collapse; margin-bottom: 20px;\">");
+        stringBuilder.append("<thead>");
+        stringBuilder.append("<tr>");
+        for (int j = 1; j <= resultSetMetaData.getColumnCount(); j++) {
+            stringBuilder.append("<th style=\"border: 1px solid #000000; padding: 5px;\">").append(resultSetMetaData.getColumnLabel(j)).append("</th>");
+        }
+        stringBuilder.append("</tr>");
+        stringBuilder.append("</thead>");
         while (resultSet.next()) {
+            stringBuilder.append("<tbody>");
             stringBuilder.append("<tr>");
             for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
                 stringBuilder.append("<td style=\"border: 1px solid #000000; padding: 5px;\">").append(resultSet.getString(i)).append("</td>");
             }
             stringBuilder.append("</tr>");
-
+            stringBuilder.append("</tbody>");
         }
+
         stringBuilder.append("</table>");
 
         return stringBuilder;
@@ -156,46 +165,6 @@ public class MailScheduleService {
             scheduler.deleteJob(new JobKey(scheduleId.toString(), groupName));
         } catch (SchedulerException e) {
             log.error("{} ошибка удаления планировщика", e.getMessage());
-        }
-    }
-
-    /*
-    Получение всех задач находящихся в процессе выполнения
-     */
-    public List<ReportDto> getReportDtos() {
-        try {
-            return scheduler.getJobKeys(GroupMatcher.anyGroup())
-                    .stream().map(jobKey -> {
-                        try {
-                            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-                            return (ReportDto) jobDetail.getJobDataMap().get(jobKey.getName());
-                        } catch (SchedulerException e) {
-                            log.error(e.getMessage());
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-        } catch (SchedulerException e) {
-            log.error(e.getMessage());
-            return Collections.emptyList();
-        }
-    }
-
-    /*
-    Получение конкретной задачи с определенным {id} находящейся в процессе выполнения
-     */
-    public ReportDto getReportDto(String id) {
-        try {
-            JobDetail jobDetail = scheduler.getJobDetail(new JobKey(id));
-            if (jobDetail != null) {
-                return (ReportDto) jobDetail.getJobDataMap().get(id);
-            } else {
-                return null;
-            }
-        } catch (SchedulerException e) {
-            log.error(e.getMessage());
-            return null;
         }
     }
 }
