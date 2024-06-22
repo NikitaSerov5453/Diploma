@@ -96,4 +96,10 @@ public class ReportService {
     public Optional<ReportView> findReportById(UUID id) {
         return reportRepository.findReportByReportId(id);
     }
+
+    public void stopReport(UUID id) {
+        Optional<ReportView> reportView = reportRepository.findReportByReportId(id);
+
+        mailScheduleService.stopSchedule(reportView.get().getAutomatedReporting(), reportView.get().getName());
+    }
 }

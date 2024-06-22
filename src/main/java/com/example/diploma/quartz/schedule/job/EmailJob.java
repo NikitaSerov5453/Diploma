@@ -1,6 +1,5 @@
 package com.example.diploma.quartz.schedule.job;
 
-import com.example.diploma.dto.ReportDto;
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.service.MailSenderService;
 import com.example.diploma.utils.ExcelUtils;
@@ -9,18 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -64,8 +56,6 @@ public class EmailJob implements Job {
         List<Connection> connections = new ArrayList<>();
         List<List<String>> queries = new ArrayList<>(authorisationsSize);
         List<Integer> queriesSize = new ArrayList<>();
-
-//        ByteArrayInputStream byteArrayInputStream = null;
         ByteArrayOutputStream byteArrayOutputStream = null;
         String name = jobDataMap.getString("name");
         StringBuilder htmlTable = new StringBuilder();
@@ -107,12 +97,6 @@ public class EmailJob implements Job {
                 try {
                     htmlTable.append(mailScheduleService.toHtmlTable(statements.get(i).executeQuery(queries.get(i).get(j))));
                     byteArrayOutputStream = excelUtils.dataToExcel(statements.get(i).executeQuery(queries.get(i).get(j)));
-
-//                    InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
-//                    responseEntity = ResponseEntity.ok()
-//                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename" + "file.xlsx")
-//                            .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
-//                            .body(inputStreamResource);
                 } catch (SQLException | IOException e) {
                     throw new RuntimeException(e);
                 }

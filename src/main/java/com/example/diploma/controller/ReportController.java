@@ -46,7 +46,12 @@ public class ReportController {
         return reportService.updateReport(reportDto);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/stop/{id}")
+    public void stopReport(@PathVariable("id") UUID id) {
+        reportService.stopReport(id);
+    }
+
+    @PutMapping("/delete/{id}")
     public void deleteReport(@PathVariable("id") UUID id) {
         reportService.deleteReport(id);
     }

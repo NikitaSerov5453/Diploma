@@ -151,9 +151,9 @@ public class MailScheduleService {
         return stringBuilder;
     }
 
-    public void stopSchedule(UUID scheduleId, UUID reportId) {
+    public void stopSchedule(UUID scheduleId, String groupName) {
         try {
-            scheduler.unscheduleJob(new TriggerKey(scheduleId.toString(), reportId.toString()));
+            scheduler.unscheduleJob(new TriggerKey(scheduleId.toString(), groupName));
         } catch (SchedulerException e) {
             log.error("{} ошибка отключения планировщика", e.getMessage());
         }
