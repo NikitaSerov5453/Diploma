@@ -127,13 +127,12 @@ public class MailScheduleService {
      */
     public StringBuilder toHtmlTable(ResultSet resultSet) throws SQLException {
         ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<table style=\"border: 1px solid #000000; border-collapse: collapse; margin-bottom: 20px;\">");
         stringBuilder.append("<thead>");
         stringBuilder.append("<tr>");
         for (int j = 1; j <= resultSetMetaData.getColumnCount(); j++) {
-            stringBuilder.append("<th style=\"border: 1px solid #000000; padding: 5px;\">").append(resultSetMetaData.getColumnLabel(j)).append("</th>");
+            stringBuilder.append("<th style=\"border: 1px solid #000000; padding: 5px; background-color: #bfbfbf;\">").append(resultSetMetaData.getColumnLabel(j)).append("</th>");
         }
         stringBuilder.append("</tr>");
         stringBuilder.append("</thead>");

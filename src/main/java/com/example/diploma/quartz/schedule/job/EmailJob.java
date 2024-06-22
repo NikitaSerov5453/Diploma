@@ -3,13 +3,24 @@ package com.example.diploma.quartz.schedule.job;
 import com.example.diploma.dto.ReportDto;
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.service.MailSenderService;
+import com.example.diploma.utils.ExcelUtils;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -28,6 +39,8 @@ public class EmailJob implements Job {
     private final MailSenderService mailSenderService;
 
     private final MailScheduleService mailScheduleService;
+
+    private final ExcelUtils excelUtils;
 
     /*
     Работа выполняющайся при срабатывании триггера
@@ -52,8 +65,11 @@ public class EmailJob implements Job {
         List<List<String>> queries = new ArrayList<>(authorisationsSize);
         List<Integer> queriesSize = new ArrayList<>();
 
+//        ByteArrayInputStream byteArrayInputStream = null;
+        ByteArrayOutputStream byteArrayOutputStream = null;
         String name = jobDataMap.getString("name");
         StringBuilder htmlTable = new StringBuilder();
+
 
         for (int i = 0; i < authorisationsSize; i++) {
             queries.add(new ArrayList<>());
@@ -89,13 +105,26 @@ public class EmailJob implements Job {
         for (int i = 0; i < authorisationsSize; i++) {
             for (int j = 0; j < queriesSize.get(i); j++) {
                 try {
-                     htmlTable.append(mailScheduleService.toHtmlTable(statements.get(i).executeQuery(queries.get(i).get(j))));
-                } catch (SQLException e) {
+                    htmlTable.append(mailScheduleService.toHtmlTable(statements.get(i).executeQuery(queries.get(i).get(j))));
+                    byteArrayOutputStream = excelUtils.dataToExcel(statements.get(i).executeQuery(queries.get(i).get(j)));
+
+//                    InputStreamResource resource = new InputStreamResource(byteArrayInputStream);
+//                    responseEntity = ResponseEntity.ok()
+//                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename" + "file.xlsx")
+//                            .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+//                            .body(inputStreamResource);
+                } catch (SQLException | IOException e) {
                     throw new RuntimeException(e);
                 }
             }
-            mailSenderService.sendMail(mailProperties.getUsername(), addresses, name, htmlTable.toString());
+            try {
+                assert byteArrayOutputStream != null;
+                mailSenderService.sendMail(mailProperties.getUsername(), addresses, name, htmlTable.toString(), byteArrayOutputStream);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
         }
+
         for (Connection connection : connections) {
             try {
                 connection.close();
