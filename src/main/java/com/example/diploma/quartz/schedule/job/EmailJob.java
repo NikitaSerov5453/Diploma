@@ -2,19 +2,21 @@ package com.example.diploma.quartz.schedule.job;
 
 import com.example.diploma.quartz.schedule.MailScheduleService;
 import com.example.diploma.service.MailSenderService;
-import com.example.diploma.utils.ExcelUtils;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.quartz.*;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +33,6 @@ public class EmailJob implements Job {
     private final MailSenderService mailSenderService;
 
     private final MailScheduleService mailScheduleService;
-
-    private final ExcelUtils excelUtils;
 
     /*
     Работа выполняющайся при срабатывании триггера
@@ -56,9 +56,10 @@ public class EmailJob implements Job {
         List<Connection> connections = new ArrayList<>();
         List<List<String>> queries = new ArrayList<>(authorisationsSize);
         List<Integer> queriesSize = new ArrayList<>();
-        ByteArrayOutputStream byteArrayOutputStream = null;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         String name = jobDataMap.getString("name");
         StringBuilder htmlTable = new StringBuilder();
+        Workbook workbook = new XSSFWorkbook();
 
 
         for (int i = 0; i < authorisationsSize; i++) {
@@ -96,15 +97,39 @@ public class EmailJob implements Job {
             for (int j = 0; j < queriesSize.get(i); j++) {
                 try {
                     htmlTable.append(mailScheduleService.toHtmlTable(statements.get(i).executeQuery(queries.get(i).get(j))));
-                    byteArrayOutputStream = excelUtils.dataToExcel(statements.get(i).executeQuery(queries.get(i).get(j)));
-                } catch (SQLException | IOException e) {
+
+                    List<String> header = new ArrayList<>();
+                    ResultSet resultSet = statements.get(i).executeQuery(queries.get(i).get(j));
+                    ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+                    for (int k = 1; k <= resultSetMetaData.getColumnCount(); k++) {
+                        header.add(resultSetMetaData.getColumnLabel(k));
+                    }
+
+                    Sheet sheet = workbook.createSheet("Лист " + (j + 1));
+                    Row row = sheet.createRow(0);
+
+                    for (int k = 0; k < header.size(); k++) {
+                        Cell cell = row.createCell(k);
+                        cell.setCellValue(header.get(k));
+                    }
+
+                    int rowIndex = 1;
+                    while (resultSet.next()) {
+                        row = sheet.createRow(rowIndex);
+                        rowIndex++;
+                        for (int k = 0; k < header.size(); k++) {
+                            Cell cell = row.createCell(k);
+                            cell.setCellValue(resultSet.getString(k + 1));
+                        }
+                    }
+                } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             }
             try {
-                assert byteArrayOutputStream != null;
+                workbook.write(byteArrayOutputStream);
                 mailSenderService.sendMail(mailProperties.getUsername(), addresses, name, htmlTable.toString(), byteArrayOutputStream);
-            } catch (MessagingException e) {
+            } catch (MessagingException | IOException e) {
                 throw new RuntimeException(e);
             }
         }
