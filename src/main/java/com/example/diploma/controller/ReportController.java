@@ -51,7 +51,7 @@ public class ReportController {
         reportService.stopReport(id);
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteReport(@PathVariable("id") UUID id) {
         reportService.deleteReport(id);
     }
